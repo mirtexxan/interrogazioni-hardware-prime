@@ -1,0 +1,9 @@
+{
+  "framework": null,
+  "regions": ["fra1"],
+  "functions": {
+    "api/state.js": {
+      "maxDuration": 10
+    }
+  }
+}
