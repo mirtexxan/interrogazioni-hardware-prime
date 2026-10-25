@@ -75,6 +75,7 @@ async function fetchCloud(code){
 }
 async function openCloud(code){
   const result=await fetchCloud(code);
+  const pristineCloud=!result.state || (result.state.history.length===0 && !result.state.current);
   state=result.state||{version:1,scale:structuredClone(DEFAULT_SCALE),mode:'levels',current:null,history:[]};
   cloudRevision=result.revision;
   cloudCode=code;
@@ -95,10 +96,10 @@ async function openCloud(code){
       if(!state.current)state.current=local.current;
       else if(JSON.stringify(state.current)!==JSON.stringify(local.current))keepLocal=true;
     }
-    if(!result.state)state.scale=local.scale;
+    if(pristineCloud)state.scale=local.scale;
     state.history.sort((a,b)=>new Date(a.date)-new Date(b.date));
     migrateSavedText();migrateCurrent();
-    if(added||local.current&&!keepLocal||!result.state)save();
+    if(added||local.current&&!keepLocal||pristineCloud)save();
   }
   if(dirty){const ok=await flushSave();if(!ok)throw Error('Il trasferimento del vecchio archivio non è riuscito. I dati nel browser non sono stati rimossi.')}
   if(local&&!keepLocal){try{localStorage.removeItem(KEY)}catch{}}
