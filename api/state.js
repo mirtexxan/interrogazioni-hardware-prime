@@ -72,7 +72,7 @@ async function latest() {
   return { all, blob: all.at(-1) ?? null };
 }
 
-export default async function handler(request) {
+async function handler(request) {
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: headersFor(request) });
   }
@@ -117,3 +117,5 @@ export default async function handler(request) {
     return json(request, 503, { error: 'Archivio cloud non disponibile. Riprova senza chiudere la pagina.' });
   }
 }
+
+export default { fetch: handler };
